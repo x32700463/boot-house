@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加房源</title>
+    <link th:href="@{/lib/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<form th:action="@{/house/add}"
+      method="post"
+      enctype="multipart/form-data"
+      class="form-horizontal" role="form">
+    <!-- 省-->
+    <div class="form-group">
+        <label for="province" class="col-sm-2 control-label">所在省</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="province" name="province" >
+              <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <!--市-->
+    <div class="form-group">
+        <label for="city" class="col-sm-2 control-label">所在市</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="city" name="city" >
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <!--区-->
+    <div class="form-group">
+        <label for="area" class="col-sm-2 control-label">所在区县</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="area" name="area" >
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <!--租赁方式-->
+    <div class="form-group">
+        <label for="rent_mode" class="col-sm-2 control-label">租赁方式</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="rent_mode" name="rentMode" >
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <!--朝向-->
+    <div class="form-group">
+        <label for="orientation" class="col-sm-2 control-label">朝向</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="orientation" name="orientation" >
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <!--户型-->
+    <div class="form-group">
+        <label for="house_type" class="col-sm-2 control-label">户型</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="house_type" name="houseType" >
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+    </div>
+    <!--租金-->
+    <div class="form-group">
+        <label for="rental" class="col-sm-2 control-label">租金</label>
+        <div class="col-sm-3">
+            <input type="number" name="trntal" id="rental" class="form-control">
+        </div>
+    </div>
+    <!--地址-->
+    <div class="form-group">
+        <label for="address" class="col-sm-2 control-label">详细地址</label>
+        <div class="col-sm-3">
+            <input type="number" name="address" id="address" class="form-control">
+        </div>
+    </div>
+        <!--图片-->
+    <div class="form-group">
+        <label for="file" class="col-sm-2 control-label">图片</label>
+        <div class="col-sm-3">
+            <input type="file" name="file" id="file" class="form-control">
+        </div>
+    </div>
+    <!--添加-->
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">添加</button>
+        </div>
+    </div>
+</form>
+    <script th:src="@{/lib/js/jquery/jquery.min.js}"></script>
+    <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:inline="javascript">
+        const path = [[${#request.getContextPath()}]]
+        const emptyOption = "<option value=''>--请选择--</option>>"
+        $(function () {
+            House.queryArea('province')
+            $('#province').change(function () {
+                $('#city').html(emptyOption)
+                $('#area').html(emptyOption)
+                if(this.value){
+                    House.queryArea('city',this.value)
+                }
+            })
+            //给添加下拉change事件
+            $('#city').change(function () {
+                $('#area').html(emptyOption)
+                if(this.value){
+                    House.queryArea('area',this.value)
+                }
+            })
+            //加载租赁方式,朝向和户型的字典数据
+            House.queryDict('rent_mode');
+            House.queryDict('orientation')
+            House.queryDict('house_type')
+        })
+
+        let House = {
+            queryArea:function (documentId,pid) {
+                pid = pid || 0;
+                $.ajax({
+                    url:path + "/area/queryByPid",
+                    type :'GET',
+                    data: 'pid=' + pid,
+                    dataType :'json',
+                    success :function (res) {
+                        let options = "<option value=''>--请选择--</option>"
+                        for(let area of res){
+                            options += "<option value='"+area.id+"'>"
+                                    +area.name
+                                    +"</option>"
+
+                        }
+                        $("#" + documentId).html(options)
+                    }
+                })
+
+            },
+            queryDict:function (groupId) {
+                $.ajax({
+                    url:path +"/dict/"+ groupId,
+                    type: 'GET',
+                    data: '',
+                    success:function (res) {
+                        let options = "<option value=''>--请选择--</option>"
+                        $.each(res,function (index,dict) {
+                            options += "<option value='"+dict.value +"'>"
+                                    +dict.name
+                                   +"</option>"
+                        })
+                        $('#'+groupId).html(options)
+                    }
+                })
+            }
+        };
+    </script>
+</body>
+</html>
