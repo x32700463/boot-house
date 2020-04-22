@@ -72,7 +72,7 @@
     <div class="form-group">
         <label for="rental" class="col-sm-2 control-label">租金</label>
         <div class="col-sm-3 input-group">
-            <input type="number" name="trntal" id="rental" class="form-control" >
+            <input type="number" name="rental" id="rental" class="form-control" >
         </div>
     </div>
     <!--地址-->
@@ -168,10 +168,10 @@
             //校验表单项
            validateForm :function () {
                $('#addForm').validate({
-                   debug:true,
-                   submitHandler :function(form){
+                   debug:false,
+                   /*submitHandler :function(form){
                        alert("校验成功")
-                   },
+                   },*/
                    errorElement:'div',
                    errorPlacement :function(errorEle,validateEle){
                        errorEle.addClass('input-group-addon')
@@ -183,6 +183,14 @@
                    //校验规则
                    rules: {
                        province :'required',
+                       city:'required',
+                       area:'required',
+                       renMode:'required',
+                       rental:{
+                           required:true,
+                           positiveInt:true,
+                           max:10000
+                       },
                        address :{
                          required :true,
                          maxlength:'10'
@@ -191,6 +199,14 @@
                    //校验失败后的消息
                    messages: {
                        province: '省为必填项',
+                       city:'必填项',
+                       area:'必填项',
+                       rentMode:'必填项',
+                       rental:{
+                           required:"必填项",
+                           positiveInt:"必须是大于0的整数",
+                           max:"最大10万"
+                       },
                        address: {
                            required:'必填项',
                            maxlength: '10个字符以内'
@@ -198,6 +214,10 @@
 
                    }
                })
+               $.validator.addMethod('positiveInt',function (value,element) {
+                    let reg=/^\+?[1-9]\d*$/
+                    return this.optional(element)||(reg.test(value))
+               },'必须是大于0的正整数');
            }
         };
     </script>

@@ -13,6 +13,9 @@ spring:
   thymeleaf:
     cache: false
     encoding: utf-8
+  servlet:
+    multipart:
+      max-file-size: 2MB
 mybatis:
   mapper-locations: classpath:mappers/*.xml
   type-aliases-package: com.etoak.bean
@@ -22,3 +25,8 @@ pagehelper:
 logging:
   level:
     com.etoak.mapper: DEBUG
+
+upload:
+  dir: d:/upload/
+  savePathPrefix: /pics/
+  mapping: /pics/**
