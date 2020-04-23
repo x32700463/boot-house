@@ -102,8 +102,16 @@ public class HouseController {
     @GetMapping(value="/list" ,produces = "application/json;charset=UTF-8")
     @ResponseBody
     public Page<HouseVo> queryList(@RequestParam(required = false,defaultValue = "1")int pageNum,
-                                   @RequestParam(required = false,defaultValue = "10")int pageSize, HouseVo housevo){
-       log.info("pageNum -{},pageSize -{} houseVo -{}",pageNum,pageSize,housevo);
-       return houseService.queryList(pageNum,pageSize,housevo);
+                                   @RequestParam(required = false,defaultValue = "10")int pageSize, HouseVo housevo,
+                                   @RequestParam(value="rentalList[]" ,required = false) String[] rentalList     ){
+       log.info("pageNum -{},pageSize -{} houseVo -{}",pageNum,pageSize,housevo,rentalList);
+       return houseService.queryList(pageNum,pageSize,housevo,rentalList);
+    }
+
+
+
+    @GetMapping("/toList")
+    public String toList(){
+        return "house/list";
     }
 }
