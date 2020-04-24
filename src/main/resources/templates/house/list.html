@@ -217,7 +217,9 @@
         </div>
     </div>
 </div>
-    
+    <form id="delFrom" method="post">
+        <input type="hidden" name="_method" value="delete">
+    </form>
     
     
     
@@ -331,7 +333,8 @@
                     },
                     {title:'操作',events:houseEvent,formatter(value,row,index){
                         let updateBtn = "<buttom id ='updateBtn' class='btn btn-primary' type='button'  data-toggle='modal' data-target='#myModal'\n>更新</buttom>"
-                        return updateBtn;
+                        let deleteBtn = "<button id='deleteBtn' class='btn btn-danger' type='button'>删除</button>"
+                            return updateBtn + "" + deleteBtn;
                         },
 
                     },
@@ -433,6 +436,13 @@
             $('#update_orientation').val(row.orientation)
             $('#update_rental').val(row.rental)
             $('#update_address').val(row.address)
+
+        },
+        'click #deleteBtn' : function (event,value,row,index) {
+            let action = path +  '/house/' +row.id
+            if(confirm('确认要删除吗')){
+                $('#delFrom').attr('action',action).submit();
+            }
 
         }
     }
