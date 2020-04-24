@@ -114,4 +114,11 @@ public class HouseController {
     public String toList(){
         return "house/list";
     }
+
+    @RequestMapping(value = "/update",method = RequestMethod.PUT)
+    public String update(House house){
+        log.info("house - {}",house);
+        houseService.updateHouse(house);
+        return "redirect:/house/toList";
+    }
 }
