@@ -10,6 +10,7 @@ spring:
     password: etoak
     hikari:
       maximum-pool-size: 50
+
   thymeleaf:
     cache: false
     encoding: utf-8
